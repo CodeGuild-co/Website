@@ -2,66 +2,83 @@
 
 {% block content %}
 
-<h1>{{ repo.name }}</h1>
-
-<ul class="links">
-    {% if repo.website %}<li><a href="{{ repo.website }}">Website</a></li>{% endif %}
-    <li><a href="{{ repo.github }}">GitHub</a></li>
-</ul>
-
-<p class="lead">{{ repo.description }}</p>
-
-<h2>Contributors</h2>
-
-<ul class="contributors">
-    {% for c in repo.contributors %}
-        <li><a href="{{ c.link }}">{{ c.name }}</a></li>
-    {% endfor %}
-</ul>
-
-<div class="summary trix-content">{{ repo.summary|replace('h1>', 'h2>')|safe }}</div>
-{% if is_editor %}
-    <div class="text-right">
-        <a href="{{ url_for('update_project', name=repo.name) }}" class="btn btn-primary">
-            <i class="fa fa-edit"></i>
-            Update Project
-        </a>
+<div class="row">
+    <div class="col-12 col-sm-6 col-md-4 mt-4 text-center">
+        <img class="avatar w-100" src="https://api.adorable.io/avatars/300/{{ repo.name }}.png">
     </div>
-{% endif %}
-
-<h2>Blog</h2>
-
-{% if is_editor %}
-    <div>
-        <a href="{{ url_for('create_blog_post', project_name=repo.name) }}" class="btn btn-success">
-            <i class="fa fa-plus"></i>
-            Create Blog Post
-        </a>
+    <div class="col-12 col-sm-6 col-md-4">
+        <h1 class="text-center mb-4">{{ repo.name }}</h1>
+        <p class="text-center">{{ repo.description }}</p>
     </div>
-{% endif %}
-
-<ul class="posts">
-    {% for p in posts %}
-        <li>
-            <h3>{{ p.name }}</h3>
-            <p class="created_on">{{ p.created_on }}</p>
-            <div class="body trix-content">{{ p.body|safe }}</div>
-            {% if is_editor %}
-                <div class="text-right">
-                    <a href="{{ url_for('update_blog_post', project_name=repo.name, post_id=p.id) }}" class="btn btn-primary">
-                        <i class="fa fa-edit"></i>
-                        Update Blog Post
+    <div class="col-12 col-md-4 mt-4">
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-secondary">Links</li>
+            {% if repo.website %}
+                <li class="list-group-item">
+                    <a href="{{ repo.website }}">
+                        <i class="fa fa-link"></i>
+                        Website
                     </a>
-                    <a href="{{ url_for('delete_blog_post', project_name=repo.name, id=p.id) }}" class="btn btn-danger">
-                        <i class="fa fa-trash"></i>
-                        Delete Blog Post
-                    </a>
-                </div>
+                </li>
             {% endif %}
-        </li>
-    {% else %}
-        <li>No blog posts yet :(</li>
-    {% endfor %}
-</ul>
+            <li class="list-group-item">
+                <a href="{{ repo.github }}">
+                    <i class="fab fa-github"></i>
+                    GitHub
+                </a>
+            </li>
+            <li class="list-group-item list-group-item-secondary">Collaborators</li>
+            {% for c in repo.collaborators %}
+                <li class="list-group-item">
+                    <a href="{{ c.link }}">
+                        <i class="fa fa-user"></i>
+                        {{ c.name }}
+                    </a>
+                </li>
+            {% endfor %}
+            {% if is_editor %}
+                <li class="list-group-item list-group-item-secondary">Admin</li>
+                <li class="list-group-item">
+                    <a href="{{ url_for('update_project', name=repo.name) }}">
+                        <i class="fa fa-edit"></i>
+                        Update Project
+                    </a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{{ url_for('create_blog_post', project_name=repo.name) }}">
+                        <i class="fa fa-plus"></i>
+                        Create Blog Post
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12 jumbotron">
+        <div class="summary trix-content">{{ repo.summary|replace('h1>', 'h2>')|safe }}</div>
+    </div>
+</div>
+
+{% for p in posts %}
+    <div class="row mb-4"><div class="col">
+        <h3>Blog Post: {{ p.name }}</h3>
+        <p class="text-secondary">{{ p.created_on.strftime('%Y-%m-%d %H:%M UTC') }}</p>
+        <div class="trix-content">{{ p.body|replace('h1>', 'h3>')|safe }}</div>
+        {% if is_editor %}
+            <div class="text-right">
+                <a href="{{ url_for('update_blog_post', project_name=repo.name, post_id=p.id) }}" class="btn btn-primary">
+                    <i class="fa fa-edit"></i>
+                    Update Blog Post
+                </a>
+                <a href="{{ url_for('delete_blog_post', project_name=repo.name, id=p.id) }}" class="btn btn-danger">
+                    <i class="fa fa-trash"></i>
+                    Delete Blog Post
+                </a>
+            </div>
+        {% endif %}
+    </div></div>
+{% endfor %}
 
 {% endblock %}

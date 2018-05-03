@@ -171,7 +171,9 @@ def upsert_project(name, summary):
 
 def get_posts(project_id):
     with request.db.cursor() as curs:
-        curs.execute('SELECT name, created_on, body, id FROM blog WHERE project_id=%s', (project_id, ))
+        curs.execute(
+            'SELECT name, created_on, body, id FROM blog WHERE project_id=%s ORDER BY created_on DESC',
+            (project_id, ))
         posts = curs.fetchall()
         return [
             {'name': p[0], 'created_on': p[1], 'body': p[2], 'id':p[3]}

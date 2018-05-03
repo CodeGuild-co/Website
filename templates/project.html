@@ -21,17 +21,23 @@
 
 <div class="summary trix-content">{{ repo.summary|replace('h1>', 'h2>')|safe }}</div>
 {% if is_editor %}
-    <a href="{{ url_for('update_project', name=repo.name) }}">
-        Update
-    </a>
+    <div class="text-right">
+        <a href="{{ url_for('update_project', name=repo.name) }}" class="btn btn-primary">
+            <i class="fa fa-edit"></i>
+            Update Project
+        </a>
+    </div>
 {% endif %}
 
 <h2>Blog</h2>
 
 {% if is_editor %}
-    <a href="{{ url_for('create_blog_post', project_name=repo.name) }}">
-        Create blog post
-    </a>
+    <div>
+        <a href="{{ url_for('create_blog_post', project_name=repo.name) }}" class="btn btn-success">
+            <i class="fa fa-plus"></i>
+            Create Blog Post
+        </a>
+    </div>
 {% endif %}
 
 <ul class="posts">
@@ -41,12 +47,16 @@
             <p class="created_on">{{ p.created_on }}</p>
             <div class="body trix-content">{{ p.body|safe }}</div>
             {% if is_editor %}
-                <a href="{{ url_for('update_blog_post', project_name=repo.name, post_id=p.id) }}">
-                    Update
-                </a>
-                <a href="{{ url_for('delete_blog_post', project_name=repo.name, id=p.id) }}" class="text-danger">
-                    Delete
-                </a>
+                <div class="text-right">
+                    <a href="{{ url_for('update_blog_post', project_name=repo.name, post_id=p.id) }}" class="btn btn-primary">
+                        <i class="fa fa-edit"></i>
+                        Update Blog Post
+                    </a>
+                    <a href="{{ url_for('delete_blog_post', project_name=repo.name, id=p.id) }}" class="btn btn-danger">
+                        <i class="fa fa-trash"></i>
+                        Delete Blog Post
+                    </a>
+                </div>
             {% endif %}
         </li>
     {% else %}

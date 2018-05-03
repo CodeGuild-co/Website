@@ -67,6 +67,9 @@
             <p class="created_on">{{ p.created_on }}</p>
             <div class="body trix-content">{{ p.body|safe }}</div>
             {% if is_editor %}
+                <a href="{{ url_for('update_blog_post', project_name=repo.name, post_id=p.id) }}">
+                    Update
+                </a>
                 <a href="{{ url_for('delete_blog_post', project_name=repo.name, id=p.id) }}" class="text-danger">
                     Delete
                 </a>

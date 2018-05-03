@@ -6,7 +6,7 @@ import requests
 from dotenv import load_dotenv
 from authlib.flask.client import OAuth
 from github import Github
-from flask import Flask, render_template, session, redirect, url_for, request
+from flask import Flask, render_template, session, redirect, url_for, request, abort
 from six.moves.urllib.parse import urlencode
 
 load_dotenv()
@@ -81,7 +81,28 @@ def create_blog_post(project_name):
     return redirect(url_for('project', name=project_name))
 
 
-@app.route('/p/<project_name>/blog/<id>/')
+@app.route('/p/<project_name>/blog/<post_id>/update/', methods=['GET', 'POST'])
+def update_blog_post(project_name, post_id):
+    repo = get_repo(project_name)
+    is_editor = can_edit(repo)
+    if not is_editor:
+        abort(403)
+    with request.db.cursor() as curs:
+        curs.execute(
+            'SELECT name, body FROM blog WHERE id=%s',
+            (post_id, ))
+        name, body = curs.fetchone()
+    if request.method == 'POST':
+        with request.db.cursor() as curs:
+            curs.execute(
+                'UPDATE blog SET name=%s, body=%s WHERE id=%s',
+                (request.form['name'], request.form['body'], post_id))
+            request.db.commit()
+        return redirect(url_for('project', name=project_name))
+    return render_template('update_post.html', project_name=project_name, post_id=post_id, name=name, body=body)
+
+
+@app.route('/p/<project_name>/blog/<id>/delete/')
 def delete_blog_post(project_name, id):
     with request.db.cursor() as curs:
         curs.execute('DELETE FROM blog WHERE id = %s', (id, ))

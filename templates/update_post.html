@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Update Blog Post</h1>
+<form action="{{ url_for('update_blog_post', project_name=project_name, post_id=post_id) }}" method="POST">
+    <div class="form-group">
+        <label for="name">Post Name</label>
+        <input type="text" class="form-control" id="name" name="name" value="{{ name }}" placeholder="e.g. We Rock! Here's Why">
+        <small class="form-text text-muted">The title of your new blog post.</small>
+    </div>
+
+    <div class="form-group">
+        <label for="body">Post Body</label>
+        <input id="body" type="hidden" name="body" value="{{ body }}">
+        <trix-editor input="body" class="trix-content"></trix-editor>
+        <small class="form-text text-muted">The content of your blog post</small>
+    </div>
+
+    <div class="text-right">
+        <button type="submit" class="btn btn-success mt-2">Save Blog Post</button>
+    </div>
+</form>
+
+{% endblock %}

@@ -171,25 +171,25 @@ def get_repos():
 
 @functools.lru_cache()
 def get_repo(name):
-    g = Github()
+    g = Github(os.environ['GITHUB_ACCESS_TOKEN'])
     org = g.get_organization('CodeGuild-co')
     repo = org.get_repo(name)
-    contributors = repo.get_contributors()
+    collaborators = repo.get_collaborators()
     return {
         'name': repo.name,
         'description': repo.description,
         'website': repo.homepage,
         'github': repo.html_url,
-        'contributors': [
+        'collaborators': [
             {'name': c.login, 'link': c.html_url, 'id': c.id}
-            for c in contributors]
+            for c in collaborators]
     }
 
 
 def can_edit(repo):
     try:
         user_id = int(session['profile']['user_id'].replace('github|', ''))
-        return user_id in [c['id'] for c in repo['contributors']]
+        return user_id in [c['id'] for c in repo['collaborators']]
     except (KeyError, ValueError):
         pass
     return False

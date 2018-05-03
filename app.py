@@ -118,12 +118,18 @@ def update_blog_post(project_name, post_id):
     return render_template('update_post.html', project_name=project_name, post_id=post_id, name=name, body=body)
 
 
-@app.route('/p/<project_name>/blog/<id>/delete/')
+@app.route('/p/<project_name>/blog/<id>/delete/', methods=['GET', 'POST'])
 def delete_blog_post(project_name, id):
-    with request.db.cursor() as curs:
-        curs.execute('DELETE FROM blog WHERE id = %s', (id, ))
-        request.db.commit()
-    return redirect(url_for('project', name=project_name))
+    repo = get_repo(project_name)
+    is_editor = can_edit(repo)
+    if not is_editor:
+        abort(403)
+    if request.method == 'POST':
+        with request.db.cursor() as curs:
+            curs.execute('DELETE FROM blog WHERE id = %s', (id, ))
+            request.db.commit()
+            return redirect(url_for('project', name=project_name))
+    return render_template('delete_post.html')
 
 
 @app.route('/signin/')

@@ -79,11 +79,13 @@ def update_project(name):
     return render_template('update_project.html', name=name, summary=summary)
 
 
-@app.route('/p/<project_name>/blog/', methods=['POST'])
+@app.route('/p/<project_name>/blog/', methods=['GET', 'POST'])
 def create_blog_post(project_name):
     repo = get_repo(project_name)
     is_editor = can_edit(repo)
-    if is_editor:
+    if not is_editor:
+        abort(403)
+    if request.method == 'POST':
         with request.db.cursor() as curs:
             curs.execute('SELECT id FROM project WHERE name=%s', (project_name, ))
             project_id, = curs.fetchone()
@@ -91,7 +93,8 @@ def create_blog_post(project_name):
                 'INSERT INTO blog (project_id, name, body) VALUES (%s, %s, %s)',
                 (project_id, request.form['name'], request.form['body']))
             request.db.commit()
-    return redirect(url_for('project', name=project_name))
+        return redirect(url_for('project', name=project_name))
+    return render_template('create_post.html', project_name=project_name)
 
 
 @app.route('/p/<project_name>/blog/<post_id>/update/', methods=['GET', 'POST'])

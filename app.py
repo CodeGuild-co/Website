@@ -55,10 +55,14 @@ def project(name):
         upsert_project(name, summary)
         return redirect(url_for('project', name=name))
     with request.db.cursor() as curs:
-        curs.execute('SELECT id, summary FROM project WHERE name=%s', (name, ))
-        project_id, summary = curs.fetchone()
-        repo['summary'] = summary
-        posts = get_posts(project_id)
+        try:
+            curs.execute('SELECT id, summary FROM project WHERE name=%s', (name, ))
+            project_id, summary = curs.fetchone()
+            repo['summary'] = summary
+            posts = get_posts(project_id)
+        except TypeError:
+            repo['summary'] = ''
+            posts = []
     return render_template('project.html', repo=repo, is_editor=is_editor, posts=posts)
 
 

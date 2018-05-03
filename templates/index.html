@@ -5,16 +5,39 @@
 
 <p class="lead">The CodeGuild is a collective of students learning programming and working on projects together. Twice a year new cohorts of students are invited to <a href="https://www.villierspark.org.uk/">Villiers Park</a> to take part in a week-long residential course. They are given a project to work on during the week. This website showcases those projects.</p>
 
-<ul>{% for r in repos %}
-    <li>
-        <h2>{{ r.name }}</h2>
-        <ul class="links">
-            {% if r.website %}<li><a href="{{ r.website }}">Website</a></li>{% endif %}
-            <li><a href="{{ r.github }}">GitHub</a></li>
-            <li><a href="{{ url_for('project', name=r.name) }}">See more...</a></li>
-        </ul>
-        <p class="description">{{ r.description }}</p>
-    </li>
-{% endfor %}</ul>
+<div class="row">
+    {% for r in repos %}
+        <div class="col-md-3 col-sm-6 col-12 mb-4">
+            <div class="card">
+                <img class="card-img-top" src="https://api.adorable.io/avatars/300/{{ r.name }}.png">
+                <div class="card-body">
+                    <h5 class="card-title">{{ r.name }}</h5>
+                    <p class="card-text">{{ r.description }}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% if r.website %}
+                        <li class="list-group-item">
+                            <a href="{{ r.website }}">
+                                <i class="fa fa-link"></i>
+                                Website
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li class="list-group-item">
+                        <a href="{{ r.github }}">
+                            <i class="fab fa-github"></i>
+                            GitHub
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{{ url_for('project', name=r.name) }}">
+                            See more&hellip;
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    {% endfor %}
+</div>
 
 {% endblock %}

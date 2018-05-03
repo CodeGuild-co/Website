@@ -19,21 +19,11 @@
     {% endfor %}
 </ul>
 
+<div class="summary trix-content">{{ repo.summary|replace('h1>', 'h2>')|safe }}</div>
 {% if is_editor %}
-    <form action="" method="POST">
-        <div class="form-group">
-            <label for="body">Project Summary</label>
-            <input id="summary" type="hidden" name="summary" value="{{ repo.summary|default('') }}">
-            <trix-editor input="summary" class="trix-content"></trix-editor>
-            <small class="form-text text-muted">A quick summary of the project.</small>
-        </div>
-
-        <div class="text-right">
-            <button type="submit" class="btn btn-success mt-2">Save</button>
-        </div>
-    </form>
-{% else %}
-    <div class="summary trix-content">{{ repo.summary|safe }}</div>
+    <a href="{{ url_for('update_project', name=repo.name) }}">
+        Update
+    </a>
 {% endif %}
 
 {% if is_editor %}

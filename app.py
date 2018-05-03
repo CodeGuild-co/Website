@@ -50,10 +50,6 @@ def index():
 def project(name):
     repo = get_repo(name)
     is_editor = can_edit(repo)
-    if request.method == 'POST' and is_editor:
-        summary = request.form['summary']
-        upsert_project(name, summary)
-        return redirect(url_for('project', name=name))
     with request.db.cursor() as curs:
         try:
             curs.execute('SELECT id, summary FROM project WHERE name=%s', (name, ))
@@ -64,6 +60,23 @@ def project(name):
             repo['summary'] = ''
             posts = []
     return render_template('project.html', repo=repo, is_editor=is_editor, posts=posts)
+
+
+@app.route('/p/<name>/update/', methods=['GET', 'POST'])
+def update_project(name):
+    repo = get_repo(name)
+    is_editor = can_edit(repo)
+    if request.method == 'POST' and is_editor:
+        summary = request.form['summary']
+        upsert_project(name, summary)
+        return redirect(url_for('project', name=name))
+    with request.db.cursor() as curs:
+        try:
+            curs.execute('SELECT summary FROM project WHERE name=%s', (name, ))
+            summary, = curs.fetchone()
+        except TypeError:
+            summary = ''
+    return render_template('update_project.html', name=name, summary=summary)
 
 
 @app.route('/p/<project_name>/blog/', methods=['POST'])

@@ -178,7 +178,6 @@ def get_repos():
     org = g.get_organization("CodeGuild-co")
     repos = org.get_repos()
     repos = sorted(repos, key=lambda r: r.updated_at, reverse=True)
-    print(repos)
     return [
         {
             "name": r.name,

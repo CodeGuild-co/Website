@@ -51,6 +51,8 @@ def index():
 
 @app.route("/p/<name>/", methods=["GET", "POST"])
 def project(name):
+    if request.args.get("refresh"):
+        get_repo.cache_clear()
     repo = get_repo(name)
     is_editor = can_edit(repo)
     with request.db.cursor() as curs:

@@ -194,14 +194,14 @@ def get_repo(name):
     g = Github(os.environ["GITHUB_ACCESS_TOKEN"])
     org = g.get_organization("CodeGuild-co")
     repo = org.get_repo(name)
-    collaborators = repo.get_collaborators()
+    contributors = repo.get_contributors()
     return {
         "name": repo.name,
         "description": repo.description,
         "website": repo.homepage,
         "github": repo.html_url,
-        "collaborators": [
-            {"name": c.login, "link": c.html_url, "id": c.id} for c in collaborators
+        "contributors": [
+            {"name": c.login, "link": c.html_url, "id": c.id} for c in contributors
         ],
     }
 

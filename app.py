@@ -209,7 +209,7 @@ def get_repo(name):
 def can_edit(repo):
     try:
         user_id = int(session["profile"]["user_id"].replace("github|", ""))
-        return user_id in [c["id"] for c in repo["collaborators"]]
+        return user_id in [c["id"] for c in repo["contributors"]]
     except (KeyError, ValueError):
         pass
     return False

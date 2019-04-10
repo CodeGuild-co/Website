@@ -1,6 +1,7 @@
 import os
 import functools
 
+import sentry_sdk
 import psycopg2
 import requests
 from dotenv import load_dotenv
@@ -8,11 +9,13 @@ from authlib.flask.client import OAuth
 from github import Github
 from flask import Flask, render_template, session, redirect, url_for, request, abort
 from six.moves.urllib.parse import urlencode
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 load_dotenv()
 
-app = Flask(__name__)
+sentry_sdk.init(dsn=os.environ["SENTRY_DSN"], integrations=[FlaskIntegration()])
 
+app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
 
 oauth = OAuth(app)

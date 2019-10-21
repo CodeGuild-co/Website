@@ -21,4 +21,4 @@ requests==2.18.4
 sentry-sdk==0.7.10
 six==1.11.0
 urllib3==1.24.1
-Werkzeug==0.15.2
+Werkzeug==0.15.3

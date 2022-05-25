@@ -15,7 +15,7 @@ MarkupSafe==1.1.1
 psycopg2-binary==2.7.4
 pycparser==2.18
 PyGithub==1.39
-PyJWT==1.6.1
+PyJWT==2.4.0
 python-dotenv==0.8.2
 requests==2.18.4
 sentry-sdk==0.7.10
